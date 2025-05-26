@@ -111,4 +111,12 @@ CMD ["npm", "start"]
 
 docker-compose.yml
 
+version: '3'
 
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+
+docker compose up
