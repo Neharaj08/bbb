@@ -1,0 +1,52 @@
+: Create maven project with .war format
+Step-2: Create one html/jsp file in “src/main/webapp/index.html” and add
+ HTML code to it.
+Step-3: Create “src/main/webapp/WEB-INF” folder. In that
+ “src/main/webapp/WEB-INF/web.xml” file.
+Step-4: Include below plugin in “web.xml”
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-war-plugin</artifactId>
+<configuration>
+<webXml>src\main\webapp\WEB-INF\index.jsp</webXml> (mention which
+page to start)
+</configuration>
+</plugin>
+Step-5: Update project – Maven clean install compile test (make sure build
+ Successful)
+Adding Project to git:
+
+
+Open terminal/command prompt, navigate to project directory and run
+ “git init”
+Step 1: Create a GitHub Account and create new repository
+Step 2: Install Git on Your PC, Configure your name and email
+Step 3: Initialize Git in Eclipse:
+Open Eclipse and go to your Maven project in the Project Explorer.
+
+Right-click the project → Team → Share Project.
+Select Git, then click Next.
+Click Create to create a new local Git repository.
+Click Finish.
+Step 4: Add & Commit Files
+Right-click the project → Team → Add to Index (this stages all files for
+commit).
+Right-click again → Team → Commit.
+Enter a commit message like "Initial commit" and click Commit.
+Adding Project to git
+Step 5: Connect to GitHub and Push
+Copy your GitHub repository URL (from the GitHub page where you created the
+repository).
+In Eclipse:
+ Right-click the project → Team → Remote → Push.
+Click Create Remote.
+Enter origin as the remote name.
+ Paste the GitHub repository URL.
+Click Next.
+Select Branch to Push:
+ Source ref: master (or main, depending on GitHub).
+Destination ref: master (or main).
+Click Next, then Finish.
+ Enter your GitHub username and personal access token (create using GitHub ).
+Step 6: Verify on GitHub
+Go to your GitHub repository page and refresh. You should see your project files uploaded!
