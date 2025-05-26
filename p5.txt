@@ -1,0 +1,87 @@
+Create a file named main.tf and paste the following code:
+provider "aws" {
+ region = "us-west-2"
+}
+resource "aws_instance" "ec2_machine" {
+ ami = "ami-07b0c09aab6e66ee9"
+ instance_type = "t2.micro"
+ // count=4
+ tags ={
+ Name = "Terra EC2"
+ }
+}
+
+1. Make sure you have a text file ready:
+Create a local file named sample.txt in the current directory
+Sample.txt
+ Hellow..welcome to terraform.
+2. Create a main.tf file:
+provider "aws" {
+ region = "us-west-2"
+}
+resource "aws_instance" "ec2_machine" {
+ ami = "ami-07b0c09aab6e66ee9"
+ instance_type = "t2.micro"
+ count=4
+ tags ={
+ Name = "Terra EC2"
+ }
+}
+resource "aws_s3_bucket" "demo_bucket" {
+ bucket = "my-unique-s3-bucket-2025-upload-demo"
+ tags = {
+Name = "upload-demo"
+ }
+}
+resource "aws_s3_bucket_object" "text_file" {
+ bucket = aws_s3_bucket.demo_bucket.bucket
+ key = "sample.txt"
+ source = "./sample.txt"
+}
+
+main.tf
+provider "aws" {
+region = "us-west-2"
+}
+resource "aws_security_group" "web_sg" {
+name = "web_sg"
+description = "Allow HTTP inbound traffic"
+ingress {
+description = "HTTP"
+from_port = 80
+to_port = 80
+protocol = "tcp"
+cidr_blocks = ["0.0.0.0/0"]
+}
+egress {
+from_port = 0
+to_port = 0
+protocol = "-1"
+cidr_blocks = ["0.0.0.0/0"]
+}
+
+}
+resource "aws_instance" "web_server" {
+ami = "ami-07b0c09aab6e66ee9"
+instance_type = "t2.micro"
+security_groups = [aws_security_group.web_sg.name]
+user_data = <<-EOF
+#!/bin/bash
+yum update -y
+yum install -y httpd
+systemctl start httpd
+systemctl enable httpd
+echo "<h1>Deployed via Terraform</h1>" >/var/www/html/index.html
+EOF
+tags = {
+Name = "TerraformWebServer"
+}
+
+terraform init
+aws configure
+terraform apply
+
+
+
+
+
