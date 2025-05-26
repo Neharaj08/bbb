@@ -96,3 +96,111 @@ kubectl port-forward svc/hello-world 5000:5000
 
 
 
+app.js
+const express = require('express');
+const app = express();
+const PORT = 3000;
+
+// Route for the root URL
+app.get('/', (req, res) => {
+  res.send('Hello, World!');
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+
+
+Dockerfile
+# Use official Node.js runtime as a parent image
+FROM node:14
+# Set working directory in the container
+WORKDIR /usr/src/app
+# Copy package.json and package-lock.json
+
+COPY package*.json ./
+# Install dependencies
+RUN npm install
+# Copy the rest of the application source code
+COPY . .
+# Expose port 3000
+EXPOSE 3000
+# Run the app when the container launches
+CMD ["npm","start"]
+
+package.json
+{
+"name": "hello-world-app",
+"version": "1.0.0",
+"main": "app.js",
+"scripts": {
+  "start": "node app.js"
+},
+"dependencies": {
+  "express": "^4.17.1"
+}
+}
+
+
+hello-world-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-world-app
+  template:
+    metadata:
+      labels:
+        app: hello-world-app
+    spec:
+      containers:
+        - name: hello-world-container
+          image: your-dockerhub-username/hello-world-app:v1
+          ports:
+            - containerPort: 3000
+
+
+hello-world-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world-service
+spec:
+  selector:
+    app: hello-world-app
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+      nodePort: 30080  # Optional custom NodePort for browser access
+
+docker login
+
+docker build -t ankithalg609/hello-world-app:v1 .
+
+docker push ankithalg609/hello-world-app:v1
+
+minikube start
+
+kubectl apply -f hello-world-deployment.yaml
+kubectl apply -f hello-world-service.yaml
+
+kubectl get pods
+kubectl get services
+
+
+
+
+
+
+	
+
+
+
