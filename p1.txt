@@ -1,0 +1,73 @@
+(src/main)
+
+App.java
+package com.dsce;
+import java.util.ResourceBundle;
+
+public class App {
+	public int userlogin(String inuser, String inpwd) {
+        ResourceBundle rb = ResourceBundle.getBundle("config");
+        String username = rb.getString("username");
+        String password = rb.getString("password");
+
+        if (inuser.equals(username) && inpwd.equals(password))
+            return 1;
+        else
+            return 0;
+
+}
+}
+
+(src/test/resource)
+(config.properties)
+username=abc
+password=abc@1234
+
+(src/test/java)
+AppTest.java
+package com.dsce;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+public class AppTest {
+	@Test
+    public void testlogin1() {
+        App myapp = new App();
+        Assert.assertEquals(0, myapp.userlogin("abc", "abc1234"));
+    }
+
+    @Test
+    public void testlogin2() {
+        App myapp = new App();
+        Assert.assertEquals(1, myapp.userlogin("abc", "abc@1234"));
+    }
+
+pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.dsce</groupId>
+  <artifactId>myproject</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <dependencies>
+	  <dependency>
+    <groupId>org.testng</groupId>
+    <artifactId>testng</artifactId>
+    <version>7.5.1</version>
+    <scope>test</scope>
+</dependency>
+	  
+  </dependencies>
+  
+
+</project>
+
+Maven test
+maven install
+
+gradle init
+
+
+
+
+
+}
