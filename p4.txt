@@ -1,0 +1,98 @@
+ minikube start --driver=docker
+  minikube status
+  
+ kubectl get nodes
+
+ n: kubectl apply -f pod.yaml
+ 
+ kubectl get pods
+
+
+Save this as pod.yaml:
+apiVersion: v1
+kind: Pod
+metadata:
+ name: my-nginx
+spec:
+ containers:
+ - name: nginx
+ image: nginx:latest
+ ports:
+ - containerPort: 80
+ 
+  minikube ssh
+  
+ curl <nginx ip-address> to See the NGINX welcome page inside
+the cluster
+
+
+app.py
+
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return "Hello from App 1!! Kubernetes, also known as K8s, is awesome!"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+    
+requirements.txt
+flask==3.0.0
+
+Dockerfile
+FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY app.py .
+EXPOSE 5000
+CMD ["python", "app.py"]
+
+docker build -t neharaj08/app1-k8s:latest .
+
+docker push neharaj08/app1-k8s:latest
+
+deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hw-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello-world
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+      - name: hw-container
+        image: yourdockerhubusername/app1-k8s:latest
+        ports:
+        - containerPort: 5000
+        
+service.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world
+spec:
+  type: NodePort
+  selector:
+    app: hello-world
+  ports:
+    - port: 5000
+      targetPort: 5000
+
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+
+kubectl port-forward svc/hello-world 5000:5000
+
+
+
